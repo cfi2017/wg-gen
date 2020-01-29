@@ -84,7 +84,7 @@ func parseFields(lines []string) (fields map[string]string, err error) {
 		if len(parts) != 2 {
 			return nil, errors.New("invalid part length")
 		}
-		fields[parts[0]] = parts[1]
+		fields[parts[0]] = strings.TrimSpace(parts[1])
 	}
 	return
 }
