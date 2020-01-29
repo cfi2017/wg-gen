@@ -69,7 +69,10 @@ func init() {
 	rootCmd.PersistentFlags().StringSliceVar(&pkg.Networks, "networks", []string{"192.168.60.0/24", "192.168.61.0/24"}, "networks to route to server")
 	rootCmd.PersistentFlags().StringVar(&pkg.Endpoint, "endpoint", "office.fossilo.com:51820", "server endpoint for client configuration generation")
 	rootCmd.PersistentFlags().StringVar(&pkg.ConfigFile, "wg-config", "/etc/wireguard/wg0.conf", "wireguard config file")
-	viper.BindPFlags(rootCmd.PersistentFlags())
+	err := viper.BindPFlags(rootCmd.PersistentFlags())
+	if err != nil {
+		panic(err)
+	}
 
 }
 
