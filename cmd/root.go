@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cfi2017/wg-gen/pkg"
 	"github.com/spf13/cobra"
 
 	"github.com/mitchellh/go-homedir"
@@ -60,15 +59,15 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.wg-gen.yaml)")
-	rootCmd.PersistentFlags().StringVar(&pkg.Network, "network", "192.168.61.0", "base network address")
-	rootCmd.PersistentFlags().IntVar(&pkg.Mask, "mask", 24, "subnet mask")
-	rootCmd.PersistentFlags().StringVar(&pkg.Gateway, "gateway", "192.168.61.1", "default gateway")
-	rootCmd.PersistentFlags().StringVar(&pkg.Broadcast, "broadcast", "192.168.61.255", "broadcast address")
-	rootCmd.PersistentFlags().StringSliceVar(&pkg.DNS, "dns", []string{"192.168.61.1"}, "dns servers")
-	rootCmd.PersistentFlags().StringVar(&pkg.PublicKey, "pubkey", "", "server public key")
-	rootCmd.PersistentFlags().StringSliceVar(&pkg.Networks, "networks", []string{"192.168.60.0/24", "192.168.61.0/24"}, "networks to route to server")
-	rootCmd.PersistentFlags().StringVar(&pkg.Endpoint, "endpoint", "office.fossilo.com:51820", "server endpoint for client configuration generation")
-	rootCmd.PersistentFlags().StringVar(&pkg.ConfigFile, "wg-config", "/etc/wireguard/wg0.conf", "wireguard config file")
+	rootCmd.PersistentFlags().String("network", "192.168.61.0", "base network address")
+	rootCmd.PersistentFlags().Int("mask", 24, "subnet mask")
+	rootCmd.PersistentFlags().String("gateway", "192.168.61.1", "default gateway")
+	rootCmd.PersistentFlags().String("broadcast", "192.168.61.255", "broadcast address")
+	rootCmd.PersistentFlags().StringSlice("dns", []string{"192.168.61.1"}, "dns servers")
+	rootCmd.PersistentFlags().String("pubkey", "", "server public key")
+	rootCmd.PersistentFlags().StringSlice("networks", []string{"192.168.60.0/24", "192.168.61.0/24"}, "networks to route to server")
+	rootCmd.PersistentFlags().String("endpoint", "office.fossilo.com:51820", "server endpoint for client configuration generation")
+	rootCmd.PersistentFlags().String("wg-config", "/etc/wireguard/wg0.conf", "wireguard config file")
 	err := viper.BindPFlags(rootCmd.PersistentFlags())
 	if err != nil {
 		panic(err)

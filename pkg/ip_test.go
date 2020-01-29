@@ -8,9 +8,9 @@ import (
 func TestGetFreeAddress(t *testing.T) {
 	target := net.ParseIP("192.168.61.2")
 	ip, err := GetFreeAddress(net.IPNet{
-		IP:   net.ParseIP(Network),
-		Mask: net.CIDRMask(Mask, 32),
-	}, []net.IP{net.ParseIP(Broadcast), net.ParseIP(Network), net.ParseIP(Gateway)})
+		IP:   net.ParseIP(NetworkFlag()),
+		Mask: net.CIDRMask(MaskFlag(), 32),
+	}, []net.IP{net.ParseIP(BroadcastFlag()), net.ParseIP(NetworkFlag()), net.ParseIP(GatewayFlag())})
 	if err != nil {
 		t.Error(err)
 	}

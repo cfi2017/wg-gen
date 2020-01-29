@@ -27,15 +27,15 @@ func GeneratePeerWithPublicKey(pk string) (peer Peer, err error) {
 	if err != nil {
 		return
 	}
-	peers, err := ParseConfigFile(ConfigFile)
+	peers, err := ParseConfigFile(ConfigFileFlag())
 	if err != nil {
 		return
 	}
 	subnet := net.IPNet{
-		IP:   net.ParseIP(Network),
-		Mask: net.CIDRMask(Mask, 32),
+		IP:   net.ParseIP(NetworkFlag()),
+		Mask: net.CIDRMask(MaskFlag(), 32),
 	}
-	peer.IP, err = GetFreeAddress(subnet, append(peers.IPs(), net.ParseIP(Network), net.ParseIP(Gateway), net.ParseIP(Broadcast)))
+	peer.IP, err = GetFreeAddress(subnet, append(peers.IPs(), net.ParseIP(NetworkFlag()), net.ParseIP(GatewayFlag()), net.ParseIP(BroadcastFlag())))
 	return
 }
 
@@ -45,15 +45,15 @@ func GeneratePeer() (peer Peer, err error) {
 		return
 	}
 	peer.PublicKey = peer.PrivateKey.PublicKey()
-	peers, err := ParseConfigFile(ConfigFile)
+	peers, err := ParseConfigFile(ConfigFileFlag())
 	if err != nil {
 		return
 	}
 	subnet := net.IPNet{
-		IP:   net.ParseIP(Network),
-		Mask: net.CIDRMask(Mask, 32),
+		IP:   net.ParseIP(NetworkFlag()),
+		Mask: net.CIDRMask(MaskFlag(), 32),
 	}
-	peer.IP, err = GetFreeAddress(subnet, append(peers.IPs(), net.ParseIP(Network), net.ParseIP(Gateway), net.ParseIP(Broadcast)))
+	peer.IP, err = GetFreeAddress(subnet, append(peers.IPs(), net.ParseIP(NetworkFlag()), net.ParseIP(GatewayFlag()), net.ParseIP(BroadcastFlag())))
 	return
 }
 

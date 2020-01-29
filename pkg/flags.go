@@ -1,14 +1,57 @@
 package pkg
 
-var (
-	Network    = "192.168.61.0"
-	Gateway    = "192.168.61.1"
-	Broadcast  = "192.168.61.255"
-	Mask       = 24
-	ConfigFile = "/etc/wireguard/wg0.conf"
+import (
+	"net"
 
-	DNS       = []string{"192.168.61.1", "8.8.8.8"}
-	PublicKey = ""
-	Networks  = []string{"192.168.60.0/24", "192.168.61.0/24"}
-	Endpoint  = "office.fossilo.com:51820"
+	. "github.com/spf13/viper"
 )
+
+func NetworkFlag() string {
+	return GetString("network")
+}
+
+func GatewayFlag() string {
+	return GetString("gateway")
+}
+
+func BroadcastFlag() string {
+	return GetString("broadcast")
+}
+
+func MaskFlag() int {
+	return GetInt("mask")
+}
+
+func ConfigFileFlag() string {
+	return GetString("wg-config")
+}
+
+func DNSFlag() []net.IP {
+	raw := GetStringSlice("dns")
+	ips := make([]net.IP, len(raw))
+	for i, ip := range raw {
+		ips[i] = net.ParseIP(ip)
+	}
+	return ips
+}
+
+func PublicKeyFlag() string {
+	return GetString("pubkey")
+}
+
+func NetworksFlag() []net.IPNet {
+	raw := GetStringSlice("networks")
+	networks := make([]net.IPNet, len(raw))
+	for i, n := range raw {
+		_, network, err := net.ParseCIDR(n)
+		if err != nil {
+			panic(err)
+		}
+		networks[i] = *network
+	}
+	return networks
+}
+
+func EndpointFlag() string {
+	return GetString("endpoint")
+}

@@ -63,21 +63,10 @@ func (c Config) ClientConfig() (out string, err error) {
 }
 
 func GetDefaultServer() (s Server) {
-	s.Endpoint = Endpoint
-	s.PublicKey = PublicKey
-	s.Networks = make([]net.IPNet, len(Networks))
-	for i, network := range Networks {
-		_, n, err := net.ParseCIDR(network)
-		if err != nil {
-			panic(err)
-		}
-		s.Networks[i] = *n
-	}
-	s.DNS = make([]net.IP, len(DNS))
-	for i, server := range DNS {
-		ip := net.ParseIP(server)
-		s.DNS[i] = ip
-	}
+	s.Endpoint = EndpointFlag()
+	s.PublicKey = PublicKeyFlag()
+	s.Networks = NetworksFlag()
+	s.DNS = DNSFlag()
 	return
 }
 
