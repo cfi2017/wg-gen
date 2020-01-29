@@ -91,8 +91,7 @@ func initConfig() {
 
 		// Search config in home directory with name ".wg-gen" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".wg-gen.yml")
+		viper.SetConfigName(".wg-gen")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
