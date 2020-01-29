@@ -73,7 +73,7 @@ func Parse(in string) (p Peer, err error) {
 	if err != nil {
 		return
 	}
-	p.IP = net.ParseIP(fields["AllowedIPs"])
+	p.IP = net.ParseIP(strings.Split(fields["AllowedIPs"], "/")[0])
 	return
 }
 
