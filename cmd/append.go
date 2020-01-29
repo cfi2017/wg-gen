@@ -48,7 +48,10 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			panic(err)
 		}
+		// output public key for later use
+		fmt.Println(peer.PublicKey.String())
 		if dryRun {
+			fmt.Println("--------- CONFIG ---------")
 			fmt.Print(peer.String())
 			return
 		}
