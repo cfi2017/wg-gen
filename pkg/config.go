@@ -3,6 +3,7 @@ package pkg
 import (
 	"bufio"
 	"os"
+	"strings"
 )
 
 func ParseConfigFile(name string) (Peers, error) {
@@ -31,11 +32,13 @@ func ParseConfigFile(name string) (Peers, error) {
 		buffer += line + "\n"
 	}
 	// last peer
-	peer, err := Parse(buffer)
-	if err != nil {
-		return nil, err
+	if strings.HasPrefix(strings.TrimSpace(buffer), "[Peer]") {
+		peer, err := Parse(strings.TrimSpace(buffer))
+		if err != nil {
+			return nil, err
+		}
+		peers = append(peers, peer)
 	}
-	peers = append(peers, peer)
 	return peers, nil
 }
 
