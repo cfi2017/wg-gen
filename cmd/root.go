@@ -64,7 +64,7 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&pkg.Mask, "mask", 24, "subnet mask")
 	rootCmd.PersistentFlags().StringVar(&pkg.Gateway, "gateway", "192.168.61.1", "default gateway")
 	rootCmd.PersistentFlags().StringVar(&pkg.Broadcast, "broadcast", "192.168.61.255", "broadcast address")
-	rootCmd.PersistentFlags().StringVar(&pkg.ConfigFile, "wg-config", "/etc/wireguard/wg0", "wireguard config file")
+	rootCmd.PersistentFlags().StringVar(&pkg.ConfigFile, "wg-config", "/etc/wireguard/wg0.conf", "wireguard config file")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
