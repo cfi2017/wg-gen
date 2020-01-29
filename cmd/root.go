@@ -70,9 +70,6 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&pkg.Endpoint, "endpoint", "office.fossilo.com:51820", "server endpoint for client configuration generation")
 	rootCmd.PersistentFlags().StringVar(&pkg.ConfigFile, "wg-config", "/etc/wireguard/wg0.conf", "wireguard config file")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -90,7 +87,8 @@ func initConfig() {
 
 		// Search config in home directory with name ".wg-gen" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".wg-gen")
+		viper.SetConfigType("yaml")
+		viper.SetConfigName(".wg-gen.yml")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
