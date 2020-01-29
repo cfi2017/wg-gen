@@ -30,6 +30,12 @@ func ParseConfigFile(name string) (Peers, error) {
 		}
 		buffer += line + "\n"
 	}
+	// last peer
+	peer, err := Parse(buffer)
+	if err != nil {
+		return nil, err
+	}
+	peers = append(peers, peer)
 	return peers, nil
 }
 
