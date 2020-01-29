@@ -27,7 +27,7 @@ func GenerateKey() (Key, error) {
 }
 
 // ParseKey parses a Key from a base64-encoded string, as produced by the
-// Key.String method.
+// Key.ServerConfig method.
 func ParseKey(s string) (Key, error) {
 	b, err := base64.StdEncoding.DecodeString(s)
 	if err != nil {

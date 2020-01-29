@@ -2,9 +2,84 @@ package pkg
 
 import (
 	"bufio"
+	"net"
 	"os"
 	"strings"
+	"text/template"
 )
+
+type Server struct {
+	DNS       []net.IP
+	PublicKey string
+	Networks  []net.IPNet
+	Endpoint  string
+}
+
+type Config struct {
+	Peer   Peer
+	Server Server
+}
+
+const (
+	ServerTemplateString = `
+[Peer]
+PublicKey = {{ .Peer.PublicKey.String }}
+AllowedIPs = {{ .Peer.IP.String }}/32
+PersistentKeepAlive = 60
+`
+	ClientTemplateString = `
+[Interface]
+PrivateKey = {{ .Peer.PrivateKey.String }}
+Address = {{ .Peer.IP.String }}/32
+{{if .Server.DNS}}DNS = {{ range $index, $element := .Server.DNS }}{{if $index}},{{end}}{{$element.String}}{{end}}{{end}}
+
+[Peer]
+PublicKey = {{ .Server.PublicKey }}
+AllowedIPs = {{ range $index, $element := .Server.Networks }}{{if $index}},{{end}}{{$element}}{{end}}
+Endpoint = {{ .Server.Endpoint }}
+PersistentKeepalive = 60
+`
+)
+
+func (c Config) ServerConfig() (out string, err error) {
+	t, err := template.New("server").Parse(ServerTemplateString)
+	if err != nil {
+		return
+	}
+	w := &strings.Builder{}
+	err = t.Execute(w, c)
+	return w.String(), nil
+}
+
+func (c Config) ClientConfig() (out string, err error) {
+	t, err := template.New("client").Parse(ClientTemplateString)
+	if err != nil {
+		return
+	}
+	w := &strings.Builder{}
+	err = t.Execute(w, c)
+	return w.String(), nil
+
+}
+
+func GetDefaultServer() (s Server) {
+	s.Endpoint = Endpoint
+	s.PublicKey = PublicKey
+	s.Networks = make([]net.IPNet, len(Networks))
+	for i, network := range Networks {
+		_, n, err := net.ParseCIDR(network)
+		if err != nil {
+			panic(err)
+		}
+		s.Networks[i] = *n
+	}
+	s.DNS = make([]net.IP, len(DNS))
+	for i, server := range DNS {
+		ip := net.ParseIP(server)
+		s.DNS[i] = ip
+	}
+	return
+}
 
 func ParseConfigFile(name string) (Peers, error) {
 	peers := make(Peers, 0)
@@ -47,7 +122,9 @@ func AppendToConfigFile(name string, peer Peer) error {
 	if err != nil {
 		return err
 	}
-	out, err := peer.String()
+	out, err := Config{
+		Peer: peer,
+	}.ServerConfig()
 	if err != nil {
 		return err
 	}

@@ -27,9 +27,9 @@ var (
 	dryRun    bool
 )
 
-// appendCmd represents the append command
-var appendCmd = &cobra.Command{
-	Use:   "append",
+// generateCmd represents the generate command
+var generateCmd = &cobra.Command{
+	Use:   "generate",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -48,36 +48,42 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			panic(err)
 		}
-		// output public key for later use
-		fmt.Println(peer.PublicKey.String())
-		if dryRun {
-			fmt.Println("--------- CONFIG ---------")
-			str, err := peer.String()
-			if err != nil {
-				panic(err)
-			}
-			fmt.Print(str)
-			return
+		cfg := pkg.Config{
+			Peer:   peer,
+			Server: pkg.GetDefaultServer(),
 		}
-		err = pkg.AppendToConfigFile(pkg.ConfigFile, peer)
+
+		fmt.Println("--------- CLIENT CONFIG ---------")
+
+		str, err := cfg.ClientConfig()
 		if err != nil {
 			panic(err)
 		}
+		fmt.Print(str)
+
+		fmt.Println("--------- SERVER CONFIG ---------")
+
+		str, err = cfg.ServerConfig()
+		if err != nil {
+			panic(err)
+		}
+		fmt.Print(str)
+		return
 
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(appendCmd)
-	appendCmd.Flags().StringVarP(&publicKey, "public-key", "p", "", "use public key instead of generating")
-	appendCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "dry run")
+	rootCmd.AddCommand(generateCmd)
+	generateCmd.Flags().StringVarP(&publicKey, "public-key", "p", "", "use public key instead of generating")
+	generateCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "dry run")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// appendCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// generateCmd.PersistentFlags().ServerConfig("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// appendCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// generateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

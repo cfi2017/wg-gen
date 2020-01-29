@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net"
 	"strings"
-	"text/template"
 )
 
 type Peers []Peer
@@ -87,19 +86,4 @@ func parseFields(lines []string) (fields map[string]string, err error) {
 		fields[parts[0]] = strings.TrimSpace(parts[1])
 	}
 	return
-}
-
-func (p Peer) String() (out string, err error) {
-	t, err := template.New("peer").Parse(`
-[Peer]
-PublicKey = {{ .PublicKey.String }}
-AllowedIPs = {{ .IP.String }}/32
-PersistentKeepAlive = 60
-`)
-	if err != nil {
-		return
-	}
-	w := &strings.Builder{}
-	err = t.Execute(w, p)
-	return w.String(), nil
 }
