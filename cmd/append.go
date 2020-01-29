@@ -52,7 +52,11 @@ to quickly create a Cobra application.`,
 		fmt.Println(peer.PublicKey.String())
 		if dryRun {
 			fmt.Println("--------- CONFIG ---------")
-			fmt.Print(peer.String())
+			str, err := peer.String()
+			if err != nil {
+				panic(err)
+			}
+			fmt.Print(str)
 			return
 		}
 		err = pkg.AppendToConfigFile(pkg.ConfigFile, peer)
